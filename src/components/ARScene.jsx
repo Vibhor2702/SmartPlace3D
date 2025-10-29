@@ -197,9 +197,14 @@ const ARScene = forwardRef(({ modelData, cameraId, onError }, ref) => {
     if (!modelData || !sceneRef.current) return;
 
     const loader = new GLTFLoader();
+    
+    // Add progress logging
+    console.log('Loading model from:', modelData.url);
+    
     loader.load(
       modelData.url,
       (gltf) => {
+        console.log('Model loaded successfully:', gltf);
         const model = gltf.scene;
 
         // Enable shadows
@@ -227,15 +232,22 @@ const ARScene = forwardRef(({ modelData, cameraId, onError }, ref) => {
         model.position.sub(center.multiplyScalar(scale));
 
         modelRef.current = model;
-        // Model will be placed on tap
+        console.log('Model ready for placement');
+        // Clear any previous error
+        onError?.(null);
       },
-      undefined,
+      (progress) => {
+        // Progress callback
+        const percent = (progress.loaded / progress.total) * 100;
+        console.log(`Loading model: ${percent.toFixed(0)}%`);
+      },
       (error) => {
         console.error('Model loading error:', error);
-        onError?.('Failed to load 3D model');
+        console.error('Failed URL:', modelData.url);
+        onError?.('Failed to load 3D model. Please try a different model or check your internet connection.');
       }
     );
-  }, [modelData]);
+  }, [modelData, onError]);
 
   // Handle tap to place model
   useEffect(() => {

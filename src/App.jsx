@@ -20,6 +20,7 @@ function App() {
     setIsLoading(true);
     setError(null);
     try {
+      console.log('Model selected:', modelData);
       setSelectedModel(modelData);
     } catch (err) {
       setError('Failed to load model: ' + err.message);
