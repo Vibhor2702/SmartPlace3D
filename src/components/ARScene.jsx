@@ -20,6 +20,7 @@ const ARScene = forwardRef(({ modelData, cameraId, onError }, ref) => {
   const lightRef = useRef(null);
   const [surfaces, setSurfaces] = useState([]);
   const [isPlaced, setIsPlaced] = useState(false);
+  const [modelLoaded, setModelLoaded] = useState(false);
 
   // Initialize Three.js scene
   useEffect(() => {
@@ -196,6 +197,10 @@ const ARScene = forwardRef(({ modelData, cameraId, onError }, ref) => {
   useEffect(() => {
     if (!modelData || !sceneRef.current) return;
 
+    // Reset state when loading new model
+    setModelLoaded(false);
+    setIsPlaced(false);
+
     const loader = new GLTFLoader();
     
     // Add progress logging
@@ -206,6 +211,7 @@ const ARScene = forwardRef(({ modelData, cameraId, onError }, ref) => {
       (gltf) => {
         console.log('Model loaded successfully:', gltf);
         const model = gltf.scene;
+        console.log('Model scene:', model);
 
         // Enable shadows
         model.traverse((child) => {
@@ -232,6 +238,7 @@ const ARScene = forwardRef(({ modelData, cameraId, onError }, ref) => {
         model.position.sub(center.multiplyScalar(scale));
 
         modelRef.current = model;
+        setModelLoaded(true);
         console.log('Model ready for placement');
         // Clear any previous error
         onError?.(null);
@@ -327,9 +334,16 @@ const ARScene = forwardRef(({ modelData, cameraId, onError }, ref) => {
 
   return (
     <div ref={containerRef} className="ar-container">
-      {!isPlaced && modelRef.current && (
+      {!isPlaced && modelData && (
         <div className="tap-instruction">
-          👆 Tap on the surface to place your object
+          {modelLoaded 
+            ? `👆 Tap anywhere to place your ${modelData.name}` 
+            : `Loading ${modelData.name}...`}
+        </div>
+      )}
+      {isPlaced && (
+        <div className="placement-success">
+          ✓ Model placed! Use controls below to adjust
         </div>
       )}
     </div>
