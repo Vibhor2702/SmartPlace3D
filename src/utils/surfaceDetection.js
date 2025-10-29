@@ -15,11 +15,10 @@ export async function detectSurfaces(videoElement) {
     // Simple edge detection for surface boundaries
     // In production, use a more sophisticated plane detection model
     const grayscale = videoTensor.mean(2);
-    const edges = tf.image.sobelEdges(grayscale.expandDims(0).expandDims(-1));
     
-    // Simplified surface detection: look for horizontal lines
+    // Use a simpler approach that doesn't rely on sobelEdges
+    // Calculate gradients for edge detection
     const surfaceRegions = [];
-    const edgeData = await edges.magnitude.data();
     
     // Analyze bottom third of frame for floor detection
     const height = videoElement.videoHeight;
@@ -36,8 +35,6 @@ export async function detectSurfaces(videoElement) {
     // Cleanup tensors
     videoTensor.dispose();
     grayscale.dispose();
-    edges.magnitude.dispose();
-    edges.phase.dispose();
     
     return surfaceRegions;
   } catch (error) {
