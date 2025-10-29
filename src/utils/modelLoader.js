@@ -78,50 +78,51 @@ async function getSketchfabDownloadUrl(uid) {
 
 /**
  * Fallback models when API is unavailable
- * Uses free CDN-hosted models
+ * Uses free CDN-hosted models with proper CORS
  */
 function getFallbackModel(prompt) {
   const lowerPrompt = prompt.toLowerCase();
   
-  // Map common terms to available models
+  // Use models from KhronosGroup with CDN (better CORS support)
   if (lowerPrompt.includes('chair')) {
-    return 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Chair/glTF-Binary/Chair.glb';
+    return 'https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models@master/2.0/Chair/glTF-Binary/Chair.glb';
   } else if (lowerPrompt.includes('table') || lowerPrompt.includes('desk')) {
-    return 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Table/glTF-Binary/Table.glb';
+    return 'https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models@master/2.0/WaterBottle/glTF-Binary/WaterBottle.glb';
   } else if (lowerPrompt.includes('sofa') || lowerPrompt.includes('couch')) {
-    return 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Sofa/glTF-Binary/Sofa.glb';
+    return 'https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models@master/2.0/Avocado/glTF-Binary/Avocado.glb';
   } else if (lowerPrompt.includes('lamp') || lowerPrompt.includes('light')) {
-    return 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Lamp/glTF-Binary/Lamp.glb';
+    return 'https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models@master/2.0/Lantern/glTF-Binary/Lantern.glb';
   } else {
-    // Default to a simple cube
-    return 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Box/glTF-Binary/Box.glb';
+    // Default to a simple box
+    return 'https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models@master/2.0/Box/glTF-Binary/Box.glb';
   }
 }
 
 /**
  * Get preset demo models
+ * Using jsDelivr CDN for better reliability and CORS support
  */
 export function getPresetModels() {
   return [
     {
       name: 'Wooden Chair',
-      url: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Chair/glTF-Binary/Chair.glb',
+      url: 'https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models@master/2.0/Chair/glTF-Binary/Chair.glb',
       thumbnail: '🪑'
     },
     {
-      name: 'Coffee Table',
-      url: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Table/glTF-Binary/Table.glb',
-      thumbnail: '🪵'
+      name: 'Water Bottle',
+      url: 'https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models@master/2.0/WaterBottle/glTF-Binary/WaterBottle.glb',
+      thumbnail: '🍶'
     },
     {
-      name: 'Modern Lamp',
-      url: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Lamp/glTF-Binary/Lamp.glb',
-      thumbnail: '💡'
+      name: 'Lantern',
+      url: 'https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models@master/2.0/Lantern/glTF-Binary/Lantern.glb',
+      thumbnail: '🏮'
     },
     {
-      name: 'Sofa',
-      url: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Sofa/glTF-Binary/Sofa.glb',
-      thumbnail: '🛋️'
+      name: 'Avocado',
+      url: 'https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models@master/2.0/Avocado/glTF-Binary/Avocado.glb',
+      thumbnail: '🥑'
     }
   ];
 }
